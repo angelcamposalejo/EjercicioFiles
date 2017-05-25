@@ -24,10 +24,21 @@ void EjerciciosFiles::btOpen_Click(Win::Event& e)
 void EjerciciosFiles::btSave_Click(Win::Event& e)
 {
 	Win::FileDlg dlg;
-	dlg.SetFilter(L"Excel Files(*.xlsx)\0*.xlsx\0All Files(*.*)\0*.*\0\0", 0, L"xlsx");
-	if (dlg.BeginDialog(hWnd, L"Open a Microsoft Excel file", true) == true)
+	dlg.SetFilter(L"Unicode Text (*.txt)\0*.txt\0All Files(*.*)\0*.*\0\0", 0, L"txt");
+	if (dlg.BeginDialog(hWnd, L"Save unicode text", true) == true)
 	{
-		this->Text = dlg.GetFileNameFullPath();
+		Sys::File file;
+		if (file.CreateForWritting(dlg.GetFileNameFullPath()) == false)
+		{
+			Sys::DisplayLastError(hWnd, L"Save");
+			return;
+		}
+		wstring texto;
+		for (int i = 1000; i <= 1010; i++)
+		{
+			Sys::Format(texto, L"%d\r\n", i);
+			file.WriteText(texto);
+		}
 	}
 }
 
